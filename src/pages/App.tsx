@@ -6,6 +6,7 @@ import Header from '../components/Header'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
+import Home from './Home'
 import AddLiquidity from './AddLiquidity'
 import {
   RedirectDuplicateTokenIds,
@@ -21,6 +22,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import BackgroundImage from '../assets/images/home-b.png'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -36,19 +38,49 @@ const HeaderWrapper = styled.div`
 `
 
 const BodyWrapper = styled.div`
+  position: absolute;
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100vh;
   padding-top: 160px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 10;
+  background: #000;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       padding: 16px;
   `};
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes swing {
+    0%, 100% {
+      transform: translate3d(0, -10px, 0);
+    }
+    50% {
+      transform: translate3d(0, 10px, 0);
+    }
+  }
+
+  @keyframes swing2 {
+    0%, 100% {
+      transform: translate3d(0, -20px, 0);
+    }
+    50% {
+      transform: translate3d(0, 20px, 0);
+    }
+  }
 
   z-index: 1;
 `
@@ -68,7 +100,37 @@ export default function App() {
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
+            <div
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                top: '0',
+                left: '0',
+                overflow: 'hidden',
+                zIndex: -1
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '180vw',
+                  height: '180vh',
+                  background: `url(${BackgroundImage})`,
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  left: '-40vw',
+                  top: '-40vh',
+                  animation: 'rotate 20s linear infinite'
+                }}
+              />
+            </div>
             <Popups />
+            <Switch>
+              <Route exact path="/home" component={Home} />
+              <Route exact path="/" component={Home} />
+            </Switch>
             <Web3ReactManager>
               <Switch>
                 <Route exact strict path="/swap" component={Swap} />
@@ -85,7 +147,6 @@ export default function App() {
                 <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
-                <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>
             <Marginer />

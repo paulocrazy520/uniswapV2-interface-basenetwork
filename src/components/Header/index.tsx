@@ -1,7 +1,7 @@
 import { ChainId } from '@mumbaiswap/sdk'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { isMobile } from 'react-device-detect'
-import { Text } from 'rebass'
+import { Button, Text } from 'rebass'
 
 import styled from 'styled-components'
 
@@ -27,11 +27,16 @@ const HeaderFrame = styled.div`
   justify-content: space-between;
   flex-direction: column;
   width: 100%;
+  max-width: 1320px;
   top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   position: absolute;
   z-index: 2;
+  background: #00000080;
+  padding: 12px 0;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 12px 0 0 0;
+    padding: 12px 0;
     width: calc(100%);
     position: relative;
   `};
@@ -98,13 +103,17 @@ const NetworkCard = styled(YellowCard)`
 `
 
 const UniIcon = styled.div`
-  transition: transform 0.3s ease;
-  :hover {
-    transform: rotate(-5deg);
+  // transition: transform 0.3s ease;
+  // :hover {
+  //   transform: rotate(-5deg);
+  // }
+  img {
+    width: 70px;
   }
   ${({ theme }) => theme.mediaWidth.upToSmall`
     img { 
-      width: 4.5rem;
+      // width: 4.5rem;
+      width: 70px;
     }
   `};
 `
@@ -132,7 +141,7 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
   [ChainId.KOVAN]: 'Kovan',
-  [ChainId.MUMBAI]:'Mumbai',
+  [ChainId.MUMBAI]: 'Mumbai'
 }
 
 export default function Header() {
@@ -141,21 +150,110 @@ export default function Header() {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
+  const [isHome, setIsHome] = useState(true)
+
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const currentUrl = window.location.href
+      const splitUrl = currentUrl.split('/')
+      const currentPage = splitUrl[splitUrl.length - 1]
+      console.log('Header log - 1 : ', currentPage)
+      if (currentPage === 'home') {
+        setIsHome(true)
+      } else {
+        setIsHome(false)
+      }
+    }
+
+    window.addEventListener('popstate', handleUrlChange)
+
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange)
+    }
+  }, [])
+
   return (
     <HeaderFrame>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
           <Title href=".">
             <UniIcon>
-              <img src={isDark ? LogoDark : Logo} alt="logo" />
+              {/* <img src={isDark ? LogoDark : Logo} alt="logo" /> */}
+              <img src={Logo} alt="logo" />
             </UniIcon>
-            <TitleText>
+            {/* <TitleText>
               <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
-            </TitleText>
+            </TitleText> */}
           </Title>
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}
+            >
+              {!isHome ? (
+                <a href="/#/home">
+                  <Button
+                    sx={{
+                      background: 'transparent',
+                      color: 'white',
+                      fontSize: '16px',
+                      whiteSpace: 'nowrap',
+                      cursor: 'pointer',
+                      position: 'relative',
+                      ':before': {
+                        content: "''",
+                        position: 'absolute',
+                        width: '9px',
+                        height: '9px',
+                        borderRadius: '50%',
+                        right: '15px',
+                        top: '0',
+                        background: '#fff'
+                      },
+                      ':after': {
+                        content: "''",
+                        position: 'absolute',
+                        width: '9px',
+                        height: '9px',
+                        borderRadius: '50%',
+                        left: '15px',
+                        bottom: '0',
+                        background: '#005BE9'
+                      }
+                    }}
+                  >
+                    Yin Yang Swap
+                  </Button>
+                </a>
+              ) : (
+                <a href="/#/swap">
+                  <Button
+                    sx={{
+                      background: 'linear-gradient(111.55deg,rgba(0,91,233,.47) 19.98%,rgba(0,91,233,.66) 94.85%)',
+                      border: '3px solid #005BE9',
+                      padding: '16px 24px',
+                      borderRadius: '20px',
+                      backdropFilter: 'blur(5px)',
+                      boxShadow: '0 0 12px rgba(0,91,233,.17)',
+                      color: 'white',
+                      fontSize: '16px',
+                      whiteSpace: 'nowrap',
+                      cursor: 'pointer',
+                      ':hover': {
+                        background: 'linear-gradient(180deg,rgba(0,91,233,.42) 0,rgba(0,91,233,.17) 100%)'
+                      }
+                    }}
+                  >
+                    Launch App
+                  </Button>
+                </a>
+              )}
+            </div>
             <TestnetWrapper>
               {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
             </TestnetWrapper>
@@ -169,9 +267,9 @@ export default function Header() {
             </AccountElement>
           </HeaderElement>
           <HeaderElementWrap>
-            <VersionSwitch />
+            {/* <VersionSwitch /> */}
             <Settings />
-            <Menu />
+            {/* <Menu /> */}
           </HeaderElementWrap>
         </HeaderControls>
       </RowBetween>

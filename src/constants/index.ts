@@ -16,12 +16,15 @@ export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597
 export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
+export const _WETH = new Token(ChainId.GÖRLI, '0xEB318F822B0df8443172512D4e558a39946B55EE', 18, 'WETH', 'Wrapped Ether')
+
+
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
   [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
+  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI], _WETH, USDT],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
   [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
 }
