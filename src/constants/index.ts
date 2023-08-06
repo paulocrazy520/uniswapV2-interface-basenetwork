@@ -10,29 +10,28 @@ type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
 
-export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
-export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
-export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
-export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
-export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
-export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
-export const _WETH = new Token(ChainId.GÖRLI, '0xEB318F822B0df8443172512D4e558a39946B55EE', 18, 'WETH', 'Wrapped Ether')
+// export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
+// export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
+// export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
+// export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
+// export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
+// export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
+// export const _WETH = new Token(ChainId.GÖRLI, '0xEB318F822B0df8443172512D4e558a39946B55EE', 18, 'WETH', 'Wrapped Ether')
 
-
+// export const YTOKEN= new Token(ChainId.GÖRLI, '0xfc56fb02Ba051398a58487133c3bD3588D1DC2cc', 18, 'AI BASE20', 'AI BASE20')
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI], _WETH, USDT],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
+  // [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
+  // [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
+  // [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI], YTOKEN],
+  // [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
+  // [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
 }
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
+  ...WETH_ONLY
 }
 
 /**
@@ -40,32 +39,20 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  * tokens.
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
-  }
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
+  ...WETH_ONLY
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
+  ...WETH_ONLY
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
-  [ChainId.MAINNET]: [
-    [
-      new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
-      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')
-    ],
-    [USDC, USDT],
-    [DAI, USDT]
-  ]
+
 }
 
 export interface WalletInfo {
