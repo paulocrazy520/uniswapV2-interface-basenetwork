@@ -49,7 +49,9 @@ export default function Home() {
             </svg>
           </a>
           <a
-            href="#"
+            href="https://yinyangswap.gitbook.io/yinyangswap/"
+            target="_blank"
+            rel="noreferrer"
             style={{
               display: 'block',
               margin: '10px 0',
@@ -71,7 +73,9 @@ export default function Home() {
             </svg>
           </a>
           <a
-            href="#"
+            href="https://discord.gg/UHsVnMB7KF"
+            target="_blank"
+            rel="noreferrer"
             style={{
               display: 'block',
               margin: '10px 0',
