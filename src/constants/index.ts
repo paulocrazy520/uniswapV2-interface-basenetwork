@@ -18,13 +18,13 @@ type ChainTokenList = {
 // export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 // export const _WETH = new Token(ChainId.GÖRLI, '0xEB318F822B0df8443172512D4e558a39946B55EE', 18, 'WETH', 'Wrapped Ether')
 
-// export const YTOKEN= new Token(ChainId.GÖRLI, '0xfc56fb02Ba051398a58487133c3bD3588D1DC2cc', 18, 'AI BASE20', 'AI BASE20')
+export const YTOKEN= new Token(ChainId.GÖRLI, '0xfc56fb02Ba051398a58487133c3bD3588D1DC2cc', 18, 'AI BASE20', 'AI BASE20')
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
   // [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   // [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  // [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI], YTOKEN],
+  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI], YTOKEN],
   // [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
   // [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
 }
