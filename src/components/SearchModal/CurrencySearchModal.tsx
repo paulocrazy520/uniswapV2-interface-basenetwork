@@ -47,7 +47,7 @@ export default function CurrencySearchModal({
       category: 'Lists',
       action: 'Change Lists'
     })
-    setListView(true)
+    setListView(false)
   }, [])
   const handleClickBack = useCallback(() => {
     ReactGA.event({
@@ -57,7 +57,7 @@ export default function CurrencySearchModal({
     setListView(false)
   }, [])
   const handleSelectListIntroduction = useCallback(() => {
-    setListView(true)
+    setListView(false)
   }, [])
 
   const selectedListUrl = useSelectedListUrl()

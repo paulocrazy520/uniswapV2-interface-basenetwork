@@ -300,6 +300,8 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   const sortedLists = useMemo(() => {
     const listUrls = Object.keys(lists)
+    console.log("**********listUrls", listUrls);
+    console.log("**********lists", lists);
     return listUrls
       .filter(listUrl => {
         return Boolean(lists[listUrl].current)
