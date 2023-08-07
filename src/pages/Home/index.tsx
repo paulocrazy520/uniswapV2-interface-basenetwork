@@ -119,7 +119,7 @@ export default function Home() {
           decentralized crypto trading protocol.
         </p>
       </div>
-      <div
+      {/* <div
         style={{
           marginTop: '25vh',
           width: '100%',
@@ -167,7 +167,7 @@ export default function Home() {
               </span>
             </div>
           ))}
-      </div>
+      </div> */}
       <div
         style={{
           marginTop: '25vh'

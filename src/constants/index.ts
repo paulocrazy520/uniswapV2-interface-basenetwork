@@ -18,13 +18,14 @@ type ChainTokenList = {
 // export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 // export const _WETH = new Token(ChainId.GÖRLI, '0xEB318F822B0df8443172512D4e558a39946B55EE', 18, 'WETH', 'Wrapped Ether')
 
-export const YTOKEN= new Token(ChainId.GÖRLI, '0xfc56fb02Ba051398a58487133c3bD3588D1DC2cc', 18, 'AI BASE20', 'AI BASE20')
+export const TOSHI= new Token(ChainId.MAINNET, '0x8544FE9D190fD7EC52860abBf45088E81Ee24a8c', 18, 'Toshi', 'TOSHI')
+export const BALD= new Token(ChainId.MAINNET, '0x27D2DECb4bFC9C76F0309b8E88dec3a601Fe25a8', 18, 'Bald', 'BALD')
 
 const WETH_ONLY: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
+  [ChainId.MAINNET]: [WETH[ChainId.MAINNET], TOSHI, BALD],
   // [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   // [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI], YTOKEN],
+  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   // [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
   // [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
 }
@@ -153,3 +154,4 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.BigInt(10000))
+

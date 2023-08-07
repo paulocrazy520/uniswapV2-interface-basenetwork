@@ -7,8 +7,16 @@ import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
 
-const getTokenLogoURL = (address: string) =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+const getTokenLogoURL = (address: string) => {
+  if (address == "0x8544FE9D190fD7EC52860abBf45088E81Ee24a8c")
+    return `https://cdn.dexscreener.com/https://assets.coingecko.com/coins/images/31126/large/5dajOmhM_400x400.jpg?1690777236`
+  else if (address == "0x27D2DECb4bFC9C76F0309b8E88dec3a601Fe25a8")
+    return `https://basescan.org/token/images/bald_32.png`;
+  else if (address == "0x4200000000000000000000000000000000000006")
+    return `https://assets.coingecko.com/coins/images/17238/large/aWETH_2x.png`;
+  else
+    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+}
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -17,7 +25,7 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   border-radius: 24px;
 `
 
-const StyledLogo = styled(Logo)<{ size: string }>`
+const StyledLogo = styled(Logo) <{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
 `
