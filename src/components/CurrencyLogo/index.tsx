@@ -14,6 +14,8 @@ const getTokenLogoURL = (address: string) => {
     return `https://basescan.org/token/images/bald_32.png`;
   else if (address == "0x4200000000000000000000000000000000000006")
     return `https://assets.coingecko.com/coins/images/17238/large/aWETH_2x.png`;
+  else if (address == "0xEB466342C4d449BC9f53A865D5Cb90586f405215")
+    return `https://cdn.dexscreener.com/https://assets.coingecko.com/coins/images/26476/large/uausdc_D_3x.png?1690776252`;
   else
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
 }
