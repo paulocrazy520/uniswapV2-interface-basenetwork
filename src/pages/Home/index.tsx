@@ -73,7 +73,7 @@ export default function Home() {
             </svg>
           </a>
           <a
-            href="https://discord.gg/UHsVnMB7KF"
+            href="https://discord.gg/Y5vusDYBw6"
             target="_blank"
             rel="noreferrer"
             style={{
