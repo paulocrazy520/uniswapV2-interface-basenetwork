@@ -21,7 +21,7 @@ type ChainTokenList = {
 export const TOSHI = new Token(ChainId.MAINNET, '0x8544FE9D190fD7EC52860abBf45088E81Ee24a8c', 18, 'TOSHI', 'Toshi')
 export const BALD = new Token(ChainId.MAINNET, '0x27D2DECb4bFC9C76F0309b8E88dec3a601Fe25a8', 18, 'BALD', 'Bald')
 export const axlUSDC = new Token(ChainId.MAINNET, '0xEB466342C4d449BC9f53A865D5Cb90586f405215', 6, 'axlUSDC', 'Axelar Wrapped USDC')
-export const YIN = new Token(ChainId.MAINNET, '0xe20b5569Dfd31D37DadDf796e17B70A2e923Ab0c', 6, 'YIN', 'YinYangSwap ')
+export const YIN = new Token(ChainId.MAINNET, '0xe20b5569Dfd31D37DadDf796e17B70A2e923Ab0c', 6, 'YIN', 'YinYangSwap')
 
 
 const WETH_ONLY: ChainTokenList = {
