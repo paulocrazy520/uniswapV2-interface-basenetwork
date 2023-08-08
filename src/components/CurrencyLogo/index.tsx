@@ -17,7 +17,7 @@ const getTokenLogoURL = (address: string) => {
   else if (address == "0xEB466342C4d449BC9f53A865D5Cb90586f405215")
     return `https://cdn.dexscreener.com/https://assets.coingecko.com/coins/images/26476/large/uausdc_D_3x.png?1690776252`;
   else if (address == "0xe20b5569Dfd31D37DadDf796e17B70A2e923Ab0c")
-    return `https://yinyangswap.com/static/media/logo.1b749674.svg`;
+    return `https://yinyangswap.com/static/media/logo.2b66e514.png`;
   else
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
 }
