@@ -33,17 +33,15 @@ export default function Farm() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
   const farmContract = useFarmContract()
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, LPTOKEN)
+  const walletBalance = useCurrencyBalance(account ?? undefined, LPTOKEN)
+  const stakedBalance = useSingleCallResult(farmContract, 'tokenFarmList', [account ?? undefined], NEVER_RELOAD)?.result?.[0];
+  const totalTVL = useSingleCallResult(farmContract, 'totalTVL')?.result?.[0]
 
   const [inputAmount, setInputAmount] = useState("");
-
   const DepositAmount = useMemo(() => tryParseAmount(inputAmount, LPTOKEN), [LPTOKEN, inputAmount])
-
   const addTransaction = useTransactionAdder()
-  const totalTVL = useSingleCallResult(farmContract, 'totalTVL')?.result?.[0]
-  const balanceResult = useSingleCallResult(farmContract, 'tokenFarmList', [account ?? undefined], NEVER_RELOAD)?.result?.[0];
 
-  console.log("**********totalTVL", totalTVL, balanceResult);
+  console.log("**********totalTVL", totalTVL, stakedBalance);
 
   useEffect(() => {
     if (!farmContract)
@@ -293,7 +291,7 @@ export default function Farm() {
                     fontSize: '14px'
                   }}
                 >
-                  Wallet Balance: {selectedCurrencyBalance ? selectedCurrencyBalance.toSignificant(6) : "-"}
+                  Wallet Balance: {walletBalance ? walletBalance.toSignificant(6) : "-"}
                 </p>
                 <input
                   value={inputAmount}
@@ -326,7 +324,7 @@ export default function Farm() {
                     fontSize: '14px'
                   }}
                 >
-                  Your Staked: {balanceResult ? balanceResult.toSignificant(6) : "-"}
+                  Your Staked: {stakedBalance ? stakedBalance.toSignificant(6) : "-"}
                 </p>
                 <input
                   style={{
@@ -360,7 +358,7 @@ export default function Farm() {
                     cursor: 'pointer'
                   }
                 }}
-                disabled={selectedCurrencyBalance ? false : true}
+                disabled={walletBalance ? false : true}
                 onClick={handleDeposit}
               >
                 Stake
@@ -373,7 +371,7 @@ export default function Farm() {
                   cursor: 'pointer'
                 }}
                 onClick={handleWithdraw}
-                disabled={balanceResult ? false : true}
+                disabled={stakedBalance ? false : true}
               >
                 Unstake
               </Button>
