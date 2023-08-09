@@ -479,6 +479,32 @@ export default function Farm() {
                 Unstake
               </Button>
             </div>
+            <div
+              style={{
+                marginTop: '20px',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Button
+                sx={{
+                  width: 'calc(100% - 5px)',
+                  borderRadius: '10px',
+                  color: 'black',
+                  ':hover': {
+                    cursor: 'pointer'
+                  }
+                }}
+                // disabled={walletBalance ? false : true}
+                onClick={() => alert("You can claim rewards every 24 hours.")}
+              >
+                Claim
+              </Button>
+
+            </div>
           </div>
         </div>
       </AppBody>
