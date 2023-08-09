@@ -137,7 +137,7 @@ const BalanceText = styled(Text)`
 
 const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.MAINNET]: 'Base',
-  [ChainId.GÖRLI]: 'Görli',
+  [ChainId.GÖRLI]: 'Görli'
 }
 
 export default function Header() {
@@ -160,6 +160,8 @@ export default function Header() {
         setIsHome(false)
       }
     }
+
+    handleUrlChange();
 
     window.addEventListener('popstate', handleUrlChange)
 

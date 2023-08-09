@@ -7,6 +7,7 @@ import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
+import Farm from './Farm'
 import AddLiquidity from './AddLiquidity'
 import {
   RedirectDuplicateTokenIds,
@@ -65,7 +66,8 @@ const BodyWrapper = styled.div`
   }
 
   @keyframes swing {
-    0%, 100% {
+    0%,
+    100% {
       transform: translate3d(0, -10px, 0);
     }
     50% {
@@ -74,7 +76,8 @@ const BodyWrapper = styled.div`
   }
 
   @keyframes swing2 {
-    0%, 100% {
+    0%,
+    100% {
       transform: translate3d(0, -20px, 0);
     }
     50% {
@@ -131,8 +134,9 @@ export default function App() {
               <Route exact path="/home" component={Home} />
               <Route exact path="/" component={Home} />
             </Switch>
-            <Web3ReactManager>
+            {/* <Web3ReactManager> */}
               <Switch>
+                <Route exact path="/farm" component={Farm} />
                 <Route exact strict path="/swap" component={Swap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
@@ -148,7 +152,7 @@ export default function App() {
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               </Switch>
-            </Web3ReactManager>
+            {/* </Web3ReactManager> */}
             <Marginer />
           </BodyWrapper>
         </AppWrapper>
