@@ -38,18 +38,23 @@ export default function Farm() {
   const totalTVL = useSingleCallResult(farmContract, 'totalTVL')?.result?.[0]
 
   const [inputAmount, setInputAmount] = useState("");
+  const [outAmount, setOutAmount] = useState("");
   const DepositAmount = useMemo(() => tryParseAmount(inputAmount, LPTOKEN), [LPTOKEN, inputAmount])
+  const WithdrawAmount = useMemo(() => tryParseAmount(outAmount, LPTOKEN), [LPTOKEN, outAmount])
   const addTransaction = useTransactionAdder()
 
-  console.log("**********totalTVL", totalTVL, stakedBalance);
 
   useEffect(() => {
-    if (!farmContract)
-      return;
+    if (farmContract)
+      console.log("**********Farm Contract", farmContract);
 
-    console.log("**********Farm Contract", farmContract);
+    if (stakedBalance != undefined)
+      console.log("**********stakedBalance", stakedBalance);
 
-  }, [farmContract])
+    if (walletBalance)
+      console.log("**********walletBalance", walletBalance);
+
+  }, [farmContract, stakedBalance, walletBalance])
 
   const handleDeposit = async () => {
     if (!farmContract || !DepositAmount)
@@ -65,9 +70,16 @@ export default function Farm() {
   }
 
 
-  const handleWithdraw = () => {
-    if (!farmContract)
+  const handleWithdraw = async () => {
+    if (!farmContract || !WithdrawAmount)
       return;
+
+    try {
+      const txReceipt = await farmContract.withdraw("0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA", `0x${WithdrawAmount.raw.toString(16)}`)
+      addTransaction(txReceipt, { summary: `Wrap ${WithdrawAmount.toSignificant(6)} ETH to WETH` })
+    } catch (error) {
+      console.error('Could not deposit', error)
+    }
   }
 
   return (
@@ -327,6 +339,13 @@ export default function Farm() {
                   Your Staked: {stakedBalance ? stakedBalance.toSignificant(6) : "-"}
                 </p>
                 <input
+                  value={outAmount}
+                  onChange={(e) => {
+                    if (parseFloat(e.target.value) <= 0)
+                      setOutAmount("")
+                    else
+                      setOutAmount(e.target.value)
+                  }}
                   style={{
                     color: '#fff',
                     fontSize: '16px',
