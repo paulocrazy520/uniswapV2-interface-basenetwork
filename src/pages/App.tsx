@@ -85,6 +85,12 @@ const BodyWrapper = styled.div`
     }
   }
 
+  .no-arrows::-webkit-inner-spin-button,
+  .no-arrows::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   z-index: 1;
 `
 

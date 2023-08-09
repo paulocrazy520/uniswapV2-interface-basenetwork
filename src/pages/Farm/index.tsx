@@ -26,56 +26,65 @@ import { useFarmContract, useTokenContract, useWETHContract } from '../../hooks/
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
-
-
+import { padding } from 'polished'
 
 export default function Farm() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
   const farmContract = useFarmContract()
   const walletBalance = useCurrencyBalance(account ?? undefined, LPTOKEN)
-  const stakedBalance = useSingleCallResult(farmContract, 'tokenFarmList', [account ?? undefined], NEVER_RELOAD)?.result?.[0];
+  // const stakedBalance = useSingleCallResult(farmContract, 'tokenFarmList', [account ?? undefined], NEVER_RELOAD)
+  //   ?.result?.[0]
+  const stakedBalance = walletBalance;
+
   const totalTVL = useSingleCallResult(farmContract, 'totalTVL')?.result?.[0]
 
-  const [inputAmount, setInputAmount] = useState("");
-  const [outAmount, setOutAmount] = useState("");
+  const [inputAmount, setInputAmount] = useState('0.0')
+  const [outAmount, setOutAmount] = useState('0.0')
   const DepositAmount = useMemo(() => tryParseAmount(inputAmount, LPTOKEN), [LPTOKEN, inputAmount])
   const WithdrawAmount = useMemo(() => tryParseAmount(outAmount, LPTOKEN), [LPTOKEN, outAmount])
   const addTransaction = useTransactionAdder()
 
-
   useEffect(() => {
-    if (farmContract)
-      console.log("**********Farm Contract", farmContract);
+    if (farmContract) console.log('**********Farm Contract', farmContract)
 
-    if (stakedBalance != undefined)
-      console.log("**********stakedBalance", stakedBalance);
+    if (stakedBalance != undefined) console.log('**********stakedBalance', stakedBalance)
 
-    if (walletBalance)
-      console.log("**********walletBalance", walletBalance);
-
+    if (walletBalance) console.log('**********walletBalance', walletBalance)
   }, [farmContract, stakedBalance, walletBalance])
 
+  const handleMaxWalletBalance = () => {
+    if (walletBalance)
+      setInputAmount(walletBalance.toSignificant(6).toString());
+  }
+
+  const handleStakedBalance = () => {
+    if (stakedBalance)
+      setOutAmount(stakedBalance.toSignificant(6).toString());
+  }
+
   const handleDeposit = async () => {
-    if (!farmContract || !DepositAmount)
-      return;
+    if (!farmContract || !DepositAmount) return
 
     try {
-      const txReceipt = await farmContract.deposit("0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA", `0x${DepositAmount.raw.toString(16)}`)
+      const txReceipt = await farmContract.deposit(
+        '0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA',
+        `0x${DepositAmount.raw.toString(16)}`
+      )
       addTransaction(txReceipt, { summary: `Wrap ${DepositAmount.toSignificant(6)} ETH to WETH` })
     } catch (error) {
       console.error('Could not deposit', error)
     }
-
   }
 
-
   const handleWithdraw = async () => {
-    if (!farmContract || !WithdrawAmount)
-      return;
+    if (!farmContract || !WithdrawAmount) return
 
     try {
-      const txReceipt = await farmContract.withdraw("0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA", `0x${WithdrawAmount.raw.toString(16)}`)
+      const txReceipt = await farmContract.withdraw(
+        '0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA',
+        `0x${WithdrawAmount.raw.toString(16)}`
+      )
       addTransaction(txReceipt, { summary: `Wrap ${WithdrawAmount.toSignificant(6)} ETH to WETH` })
     } catch (error) {
       console.error('Could not deposit', error)
@@ -171,7 +180,6 @@ export default function Farm() {
               >
                 <div
                   style={{
-
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -194,8 +202,6 @@ export default function Farm() {
                       height: '42px'
                     }}
                   />
-
-
                 </div>
                 <div
                   style={{
@@ -226,7 +232,6 @@ export default function Farm() {
                   >
                     WETH
                   </span>
-
                 </div>
               </div>
               <div
@@ -246,11 +251,15 @@ export default function Farm() {
                   }}
                 >
                   {totalTVL?.toString()} &nbsp;
-                  <span style={{
-                    color: '#ddd',
-                    fontSize: '12px',
-                    fontWeight: 500,
-                  }}>  {totalTVL ? " LP Token" : "-"}
+                  <span
+                    style={{
+                      color: '#ddd',
+                      fontSize: '12px',
+                      fontWeight: 500
+                    }}
+                  >
+                    {' '}
+                    {totalTVL ? ' LP Token' : '-'}
                   </span>
                 </p>
               </div>
@@ -303,26 +312,53 @@ export default function Farm() {
                     fontSize: '14px'
                   }}
                 >
-                  Wallet Balance: {walletBalance ? walletBalance.toSignificant(6) : "-"}
+                  Wallet Balance: {walletBalance ? walletBalance.toSignificant(6) : '-'}
                 </p>
-                <input
-                  value={inputAmount}
-                  onChange={(e) => {
-                    if (parseFloat(e.target.value) <= 0)
-                      setInputAmount("")
-                    else
-                      setInputAmount(e.target.value)
-                  }}
+                <div
                   style={{
-                    width: '100%',
-                    height: '48px',
-                    color: '#fff',
-                    fontSize: '16px',
-                    background: 'rgba(255,255,255,0.08)',
-                    borderRadius: '10px'
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center'
                   }}
-                  type="number"
-                />
+                >
+                  <input
+                    className="no-arrows"
+                    value={inputAmount}
+                    onChange={e => {
+                      if (parseFloat(e.target.value) <= 0) setInputAmount('0')
+                      else setInputAmount(parseFloat(e.target.value).toString())
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '48px',
+                      color: '#fff',
+                      fontSize: '16px',
+                      background: 'rgba(255,255,255,0.08)',
+                      borderRadius: '10px',
+                      padding: '0 10px'
+                    }}
+                    type="number"
+                  />
+                  <Button
+                    sx={{
+                      position: 'absolute',
+                      right: '10px',
+                      background: walletBalance && '#153d6f70',
+                      color: '#6da8ff',
+                      padding: '5px 8px',
+                      cursor: 'pointer',
+                      border: '1px solid #153d6f70',
+                      ':hover': {
+                        border: walletBalance && '1px solid #6da8ff'
+                      }
+                    }}
+                    disabled={walletBalance ? false : true}
+                    onClick={handleMaxWalletBalance}
+                  >
+                    MAX
+                  </Button>
+                </div>
               </div>
               <div
                 style={{
@@ -336,26 +372,53 @@ export default function Farm() {
                     fontSize: '14px'
                   }}
                 >
-                  Your Staked: {stakedBalance ? stakedBalance.toSignificant(6) : "-"}
+                  Your Staked: {stakedBalance ? stakedBalance.toSignificant(6) : '-'}
                 </p>
-                <input
-                  value={outAmount}
-                  onChange={(e) => {
-                    if (parseFloat(e.target.value) <= 0)
-                      setOutAmount("")
-                    else
-                      setOutAmount(e.target.value)
-                  }}
+                <div
                   style={{
-                    color: '#fff',
-                    fontSize: '16px',
-                    width: '100%',
-                    height: '48px',
-                    background: 'rgba(255,255,255,0.08)',
-                    borderRadius: '10px'
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center'
                   }}
-                  type="number"
-                />
+                >
+                  <input
+                    className="no-arrows"
+                    value={outAmount}
+                    onChange={e => {
+                      if (parseFloat(e.target.value) <= 0) setOutAmount('0')
+                      else setOutAmount(parseFloat(e.target.value).toString())
+                    }}
+                    style={{
+                      color: '#fff',
+                      fontSize: '16px',
+                      width: '100%',
+                      height: '48px',
+                      background: 'rgba(255,255,255,0.08)',
+                      borderRadius: '10px',
+                      padding: '0 10px'
+                    }}
+                    type="number"
+                  />
+                  <Button
+                    sx={{
+                      position: 'absolute',
+                      right: '10px',
+                      background: stakedBalance && '#153d6f70',
+                      color: '#6da8ff',
+                      padding: '5px 8px',
+                      cursor: 'pointer',
+                      border: '1px solid #153d6f70',
+                      ':hover': {
+                        border: stakedBalance && '1px solid #6da8ff'
+                      }
+                    }}
+                    onClick={handleStakedBalance}
+                    disabled={stakedBalance ? false : true}
+                  >
+                    MAX
+                  </Button>
+                </div>
               </div>
             </div>
             <div
@@ -373,7 +436,7 @@ export default function Farm() {
                   width: 'calc(50% - 5px)',
                   borderRadius: '10px',
                   color: 'black',
-                  ":hover": {
+                  ':hover': {
                     cursor: 'pointer'
                   }
                 }}
