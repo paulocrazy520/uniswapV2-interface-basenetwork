@@ -134,7 +134,7 @@ export default function App() {
               <Route exact path="/home" component={Home} />
               <Route exact path="/" component={Home} />
             </Switch>
-            {/* <Web3ReactManager> */}
+            <Web3ReactManager>
               <Switch>
                 <Route exact path="/farm" component={Farm} />
                 <Route exact strict path="/swap" component={Swap} />
@@ -152,7 +152,7 @@ export default function App() {
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               </Switch>
-            {/* </Web3ReactManager> */}
+            </Web3ReactManager>
             <Marginer />
           </BodyWrapper>
         </AppWrapper>
