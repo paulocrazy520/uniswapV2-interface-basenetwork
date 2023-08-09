@@ -279,7 +279,7 @@ export default function Farm() {
                     fontWeight: 700
                   }}
                 >
-                  286944%
+                  {totalTVL ? "286944%" : "-"}
                 </span>
                 <span
                   style={{
