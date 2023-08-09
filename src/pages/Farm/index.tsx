@@ -62,7 +62,7 @@ export default function Farm() {
         <SwapPoolTabs active={'farm'} />
         <div
           style={{
-            border: '1px solid red',
+            // border: '1px solid red',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -92,16 +92,24 @@ export default function Farm() {
               style={{
                 width: '32%',
                 color: '#fff',
-                fontSize: '16px'
+                fontSize: '16px',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
-              Balance
+              TVL
             </p>
             <p
               style={{
                 width: '32%',
                 color: '#fff',
-                fontSize: '16px'
+                fontSize: '16px',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'end'
               }}
             >
               APR
@@ -131,41 +139,13 @@ export default function Farm() {
                 style={{
                   width: '33%',
                   display: 'flex',
-                  flexDirection: 'column',
+                  flexDirection: 'row',
                   alignItems: 'center'
                 }}
               >
                 <div
                   style={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'left'
-                  }}
-                >
-                  <img
-                    alt=""
-                    src="https://assets.coingecko.com/coins/images/17238/large/aWETH_2x.png"
-                    style={{
-                      width: '42px',
-                      height: '42px'
-                    }}
-                  />
-                  <p
-                    style={{
-                      marginLeft: '10px',
-                      color: '#fff',
-                      fontSize: '16px',
-                      fontWeight: 700
-                    }}
-                  >
-                    WETH
-                  </p>
-                </div>
-                <div
-                  style={{
-                    width: '100%',
+
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -180,7 +160,27 @@ export default function Farm() {
                       height: '42px'
                     }}
                   />
-                  <p
+                  <img
+                    alt=""
+                    src="https://assets.coingecko.com/coins/images/17238/large/aWETH_2x.png"
+                    style={{
+                      width: '42px',
+                      height: '42px'
+                    }}
+                  />
+
+
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'left',
+                    justifyContent: 'left'
+                  }}
+                >
+                  <span
                     style={{
                       marginLeft: '10px',
                       color: '#fff',
@@ -189,7 +189,18 @@ export default function Farm() {
                     }}
                   >
                     YIN
-                  </p>
+                  </span>
+                  <span
+                    style={{
+                      marginLeft: '10px',
+                      color: '#fff',
+                      fontSize: '16px',
+                      fontWeight: 700
+                    }}
+                  >
+                    WETH
+                  </span>
+
                 </div>
               </div>
               <div
@@ -201,7 +212,11 @@ export default function Farm() {
                   style={{
                     color: '#fff',
                     fontSize: '16px',
-                    fontWeight: 700
+                    fontWeight: 700,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}
                 >
                   $292.74 K
@@ -212,27 +227,27 @@ export default function Farm() {
                   width: '33%',
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'start',
+                  alignItems: 'end',
                   justifyContent: 'center'
                 }}
               >
-                <p
+                <span
                   style={{
                     color: '#fff',
                     fontSize: '16px',
                     fontWeight: 700
                   }}
                 >
-                  805%
-                </p>
-                <p
+                  286944%
+                </span>
+                <span
                   style={{
                     color: 'gray',
                     fontSize: '14px'
                   }}
                 >
                   annualized
-                </p>
+                </span>
               </div>
             </div>
             <div
