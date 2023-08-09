@@ -32,7 +32,7 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
 
 export function useFarmContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? "0x4a03b8194101f7Ca4DcD760cf37bDBc07848e827" : undefined, FARM_ABI, withSignerIfPossible)
+  return useContract(chainId ? "0xeD370BfbC617106D37ff6947c290A34B40CF5915" : undefined, FARM_ABI, withSignerIfPossible)
 }
 
 export function useV1FactoryContract(): Contract | null {

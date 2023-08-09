@@ -27,6 +27,8 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { padding } from 'polished'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { TokenAmount } from '@mumbaiswap/sdk'
 
 export default function Farm() {
   const theme = useContext(ThemeContext)
@@ -35,9 +37,13 @@ export default function Farm() {
   const walletBalance = useCurrencyBalance(account ?? undefined, LPTOKEN)
   // const stakedBalance = useSingleCallResult(farmContract, 'tokenFarmList', [account ?? undefined], NEVER_RELOAD)
   //   ?.result?.[0]
-  const stakedBalance = walletBalance;
+  const stakedBalance = useSingleCallResult(farmContract, 'userBalance', [account ?? undefined, "0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA"])
+    ?.result?.[0];
+  const stakedToken = stakedBalance && new TokenAmount(LPTOKEN, stakedBalance?.toString())
 
   const totalTVL = useSingleCallResult(farmContract, 'totalTVL')?.result?.[0]
+
+  const totalTVLToken = totalTVL && new TokenAmount(LPTOKEN, totalTVL.toString())
 
   const [inputAmount, setInputAmount] = useState('0.0')
   const [outAmount, setOutAmount] = useState('0.0')
@@ -45,13 +51,16 @@ export default function Farm() {
   const WithdrawAmount = useMemo(() => tryParseAmount(outAmount, LPTOKEN), [LPTOKEN, outAmount])
   const addTransaction = useTransactionAdder()
 
-  useEffect(() => {
-    if (farmContract) console.log('**********Farm Contract', farmContract)
+  const [approvalA, approveACallback] = useApproveCallback(DepositAmount, "0xeD370BfbC617106D37ff6947c290A34B40CF5915")
 
-    if (stakedBalance != undefined) console.log('**********stakedBalance', stakedBalance)
 
-    if (walletBalance) console.log('**********walletBalance', walletBalance)
-  }, [farmContract, stakedBalance, walletBalance])
+  // useEffect(() => {
+  //   // if (farmContract) console.log('**********Farm Contract', farmContract)
+
+  //   // if (stakedBalance) console.log('**********stakedBalance', stakedBalance)
+
+  //   // if (walletBalance) console.log('**********walletBalance', walletBalance)
+  // }, [farmContract, stakedBalance, walletBalance])
 
   const handleMaxWalletBalance = () => {
     if (walletBalance)
@@ -59,13 +68,12 @@ export default function Farm() {
   }
 
   const handleStakedBalance = () => {
-    if (stakedBalance)
-      setOutAmount(stakedBalance.toSignificant(6).toString());
+    if (stakedToken)
+      setOutAmount(stakedToken?.toSignificant(6));
   }
 
-  const handleDeposit = async () => {
+  const deposit = async () => {
     if (!farmContract || !DepositAmount) return
-
     try {
       const txReceipt = await farmContract.deposit(
         '0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA',
@@ -75,6 +83,19 @@ export default function Farm() {
     } catch (error) {
       console.error('Could not deposit', error)
     }
+  }
+  
+  useEffect(() => {
+    if (approvalA === ApprovalState.APPROVED) {
+      deposit();
+    }
+  }, [approvalA])
+
+  const handleDeposit = async () => {
+    if (!farmContract || !DepositAmount) return
+
+    approveACallback();
+
   }
 
   const handleWithdraw = async () => {
@@ -250,7 +271,7 @@ export default function Farm() {
                     justifyContent: 'center'
                   }}
                 >
-                  {totalTVL?.toString()} &nbsp;
+                  {totalTVLToken?.toSignificant(6)} &nbsp;
                   <span
                     style={{
                       color: '#ddd',
@@ -372,7 +393,7 @@ export default function Farm() {
                     fontSize: '14px'
                   }}
                 >
-                  Your Staked: {stakedBalance ? stakedBalance.toSignificant(6) : '-'}
+                  Your Staked: {stakedToken ? stakedToken.toSignificant(6) : '-'}
                 </p>
                 <div
                   style={{
