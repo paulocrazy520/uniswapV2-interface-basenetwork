@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { ThemeContext } from 'styled-components'
+import { ThemeContext, withTheme } from 'styled-components'
 import { Currency, Pair, Token } from '@mumbaiswap/sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
@@ -58,11 +58,12 @@ export default function Farm() {
       return;
 
     try {
-      const txReceipt = await farmContract.deposit( "0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA", `0x${DepositAmount.raw.toString(16)}` )
+      const txReceipt = await farmContract.deposit("0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA", `0x${DepositAmount.raw.toString(16)}`)
       addTransaction(txReceipt, { summary: `Wrap ${DepositAmount.toSignificant(6)} ETH to WETH` })
     } catch (error) {
       console.error('Could not deposit', error)
     }
+
   }
 
 
@@ -296,13 +297,21 @@ export default function Farm() {
                 </p>
                 <input
                   value={inputAmount}
-                  onChange={(e) => setInputAmount(e.target.value)}
+                  onChange={(e) => {
+                    if (parseFloat(e.target.value) <= 0)
+                      setInputAmount("")
+                    else
+                      setInputAmount(e.target.value)
+                  }}
                   style={{
                     width: '100%',
                     height: '48px',
+                    color: '#fff',
+                    fontSize: '16px',
                     background: 'rgba(255,255,255,0.08)',
                     borderRadius: '10px'
                   }}
+                  type="number"
                 />
               </div>
               <div
@@ -321,11 +330,14 @@ export default function Farm() {
                 </p>
                 <input
                   style={{
+                    color: '#fff',
+                    fontSize: '16px',
                     width: '100%',
                     height: '48px',
                     background: 'rgba(255,255,255,0.08)',
                     borderRadius: '10px'
                   }}
+                  type="number"
                 />
               </div>
             </div>
@@ -344,8 +356,11 @@ export default function Farm() {
                   width: 'calc(50% - 5px)',
                   borderRadius: '10px',
                   color: 'black',
-                  cursor: 'pointer'
+                  ":hover": {
+                    cursor: 'pointer'
+                  }
                 }}
+                disabled={selectedCurrencyBalance ? false : true}
                 onClick={handleDeposit}
               >
                 Stake
@@ -358,6 +373,7 @@ export default function Farm() {
                   cursor: 'pointer'
                 }}
                 onClick={handleWithdraw}
+
               >
                 Unstake
               </Button>
