@@ -326,7 +326,7 @@ export default function Farm() {
                     fontSize: '14px'
                   }}
                 >
-                  Your Staked: 0.0000 ($0.00)
+                  Your Staked: {balanceResult ? balanceResult.toSignificant(6) : "-"}
                 </p>
                 <input
                   style={{
@@ -373,7 +373,7 @@ export default function Farm() {
                   cursor: 'pointer'
                 }}
                 onClick={handleWithdraw}
-
+                disabled={balanceResult ? false : true}
               >
                 Unstake
               </Button>
