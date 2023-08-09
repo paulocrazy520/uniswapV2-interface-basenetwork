@@ -51,7 +51,7 @@ export default function Farm() {
   const WithdrawAmount = useMemo(() => tryParseAmount(outAmount, LPTOKEN), [LPTOKEN, outAmount])
   const addTransaction = useTransactionAdder()
 
-  const [approvalA, approveACallback] = useApproveCallback(DepositAmount, "0xeD370BfbC617106D37ff6947c290A34B40CF5915")
+  const [approvalA, approveACallback] = useApproveCallback(DepositAmount, "0x10E02f9b8dBB71B3761044E63F689Ff774CeE70B")
 
 
   // useEffect(() => {
@@ -79,12 +79,12 @@ export default function Farm() {
         '0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA',
         `0x${DepositAmount.raw.toString(16)}`
       )
-      addTransaction(txReceipt, { summary: `Wrap ${DepositAmount.toSignificant(6)} ETH to WETH` })
+      addTransaction(txReceipt, { summary: `LP Token ${DepositAmount.toSignificant(6)} Deposit` })
     } catch (error) {
       console.error('Could not deposit', error)
     }
   }
-  
+
   useEffect(() => {
     if (approvalA === ApprovalState.APPROVED) {
       deposit();
@@ -106,9 +106,9 @@ export default function Farm() {
         '0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA',
         `0x${WithdrawAmount.raw.toString(16)}`
       )
-      addTransaction(txReceipt, { summary: `Wrap ${WithdrawAmount.toSignificant(6)} ETH to WETH` })
+      addTransaction(txReceipt, { summary: `LP Token ${WithdrawAmount.toSignificant(6)} Withdraw` })
     } catch (error) {
-      console.error('Could not deposit', error)
+      console.error('Could not withdraw', error)
     }
   }
 
