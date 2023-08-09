@@ -156,6 +156,8 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
+  // console.log("**************currency", account, currency, selectedCurrencyBalance);
+
   return (
     <InputPanel id={id}>
       <Container hideInput={hideInput}>

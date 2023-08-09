@@ -120,6 +120,8 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@mumbaiswap/sdk": "^1.0.0",
-    "@uniswap/default-token-list": "^11.4.0"
+    "@types/web3": "^1.2.2",
+    "@uniswap/default-token-list": "^11.4.0",
+    "web3": "^4.0.3"
   }
 }

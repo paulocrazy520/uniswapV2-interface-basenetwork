@@ -1,6 +1,6 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { ThemeContext } from 'styled-components'
-import { Pair } from '@mumbaiswap/sdk'
+import { Currency, Pair, Token } from '@mumbaiswap/sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -20,41 +20,56 @@ import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { LPTOKEN, TOSHI } from '../../constants'
+import { useFarmContract, useTokenContract, useWETHContract } from '../../hooks/useContract'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
+import { tryParseAmount } from '../../state/swap/hooks'
+
+
 
 export default function Farm() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
+  const farmContract = useFarmContract()
+  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, LPTOKEN)
 
-  // fetch the user's balances of all tracked V2 LP tokens
-  const trackedTokenPairs = useTrackedTokenPairs()
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
-  )
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
-    tokenPairsWithLiquidityTokens
-  ])
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    liquidityTokens
-  )
+  const [inputAmount, setInputAmount] = useState("");
 
-  // fetch the reserves for all V2 pools in which the user has a balance
-  const liquidityTokensWithBalances = useMemo(
-    () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
-      ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
-  )
+  const DepositAmount = useMemo(() => tryParseAmount(inputAmount, LPTOKEN), [LPTOKEN, inputAmount])
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-  const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+  const addTransaction = useTransactionAdder()
+  const totalTVL = useSingleCallResult(farmContract, 'totalTVL')?.result?.[0]
+  const balanceResult = useSingleCallResult(farmContract, 'tokenFarmList', [account ?? undefined], NEVER_RELOAD)?.result?.[0];
 
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+  console.log("**********totalTVL", totalTVL, balanceResult);
 
-  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+  useEffect(() => {
+    if (!farmContract)
+      return;
+
+    console.log("**********Farm Contract", farmContract);
+
+  }, [farmContract])
+
+  const handleDeposit = async () => {
+    if (!farmContract || !DepositAmount)
+      return;
+
+    try {
+      const txReceipt = await farmContract.deposit( "0x219cF3c02dd082fED83850DFF4ED49D57A2C6ddA", `0x${DepositAmount.raw.toString(16)}` )
+      addTransaction(txReceipt, { summary: `Wrap ${DepositAmount.toSignificant(6)} ETH to WETH` })
+    } catch (error) {
+      console.error('Could not deposit', error)
+    }
+  }
+
+
+  const handleWithdraw = () => {
+    if (!farmContract)
+      return;
+  }
 
   return (
     <>
@@ -219,7 +234,13 @@ export default function Farm() {
                     justifyContent: 'center'
                   }}
                 >
-                  $292.74 K
+                  {totalTVL?.toString()} &nbsp;
+                  <span style={{
+                    color: '#ddd',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                  }}>  {totalTVL ? " LP Token" : "-"}
+                  </span>
                 </p>
               </div>
               <div
@@ -271,9 +292,11 @@ export default function Farm() {
                     fontSize: '14px'
                   }}
                 >
-                  Wallet Balance: 0.0000 ($0.00)
+                  Wallet Balance: {selectedCurrencyBalance ? selectedCurrencyBalance.toSignificant(6) : "-"}
                 </p>
                 <input
+                  value={inputAmount}
+                  onChange={(e) => setInputAmount(e.target.value)}
                   style={{
                     width: '100%',
                     height: '48px',
@@ -320,8 +343,10 @@ export default function Farm() {
                 sx={{
                   width: 'calc(50% - 5px)',
                   borderRadius: '10px',
-                  color: 'black'
+                  color: 'black',
+                  cursor: 'pointer'
                 }}
+                onClick={handleDeposit}
               >
                 Stake
               </Button>
@@ -329,8 +354,10 @@ export default function Farm() {
                 sx={{
                   width: 'calc(50% - 5px)',
                   borderRadius: '10px',
-                  color: 'black'
+                  color: 'black',
+                  cursor: 'pointer'
                 }}
+                onClick={handleWithdraw}
               >
                 Unstake
               </Button>
